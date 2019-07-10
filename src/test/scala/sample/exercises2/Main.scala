@@ -19,7 +19,7 @@ object Main {
 //    Exercises.patternMatch2((1,2))
 //    Exercises.patternMatch2(List(1,2))
 //    Exercises.patternMatch2(Array(1,2))
-    Exercises.functional1()
+    //Exercises.functional1()
   }
 
 }
