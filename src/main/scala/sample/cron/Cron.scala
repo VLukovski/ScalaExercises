@@ -41,6 +41,10 @@ object Cron extends App {
     for (line <- Source.fromFile(config).getLines) {
       breakable {
         elements = line.split(" ")
+        if (elements.length != 3 || (!elements(2).contains("daily") && !elements(2).contains("hourly") && !elements(2).contains("times") && !elements(2).contains("minute"))){
+          println("This line is not set up correctly in the config")
+          break
+        }
         toRun = elements(2)
         if (toRun.contains("daily")) {
           time = elements(1) + ":" + elements(0)
@@ -83,10 +87,6 @@ object Cron extends App {
             time = elements(1) + ":" + elements(0)
             day = "today"
           }
-        }
-        else {
-          println("This line is not set up correctly in the config")
-          break
         }
         if (time.split(":")(0).length == 1) time = "0" + time
         if (time.split(":")(1).length == 1) time = time.substring(0, 3) + "0" + time.substring(3)
