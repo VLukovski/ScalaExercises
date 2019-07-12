@@ -33,47 +33,49 @@ object Cron extends App {
   def getTime(hours: String, minutes: String, line: String): Unit = {
     val elements = line.split(" ")
     val output = ListBuffer[String]("", "")
-    if (elements(2).contains("daily")) {
-      output(0) = elements(1) + ":" + elements(0)
-      if (hours.toInt > elements(1).toInt) output(1) = "tomorrow"
-      else if (hours.toInt == elements(1).toInt && minutes.toInt > elements(0).toInt) output(1) = "tomorrow"
-      else output(1) = "today"
-    }
-    else if (elements(2).contains("hourly")) {
-      if (hours.toInt == 23) {
-        output(0) = "00" + ":" + elements(0)
-        output(1) = "tomorrow"
-      }
-      else if (minutes.toInt <= elements(0).toInt) {
-        output(0) = hours + ":" + elements(0)
-        output(1) = "today"
-      }
-      else {
-        output(0) = (hours.toInt + 1).toString + ":" + elements(0)
-        output(1) = "today"
-      }
-    }
-    else if (elements(2).contains("minute")) {
-      output(0) = hours + ":" + minutes
-      output(1) = "today"
-    }
-    else if (elements(2).contains("times")) {
-      if (hours.toInt == elements(1).toInt + 1 && minutes.toInt < elements(0).toInt) {
+    elements(2) match {
+      case x if elements(2).contains("daily") =>
+        output(0) = elements(1) + ":" + elements(0)
+        if (hours.toInt > elements(1).toInt) output(1) = "tomorrow"
+        else if (hours.toInt == elements(1).toInt && minutes.toInt > elements(0).toInt) output(1) = "tomorrow"
+        else output(1) = "today"
+
+      case x if elements(2).contains("hourly") =>
+        if (hours.toInt == 23) {
+          output(0) = "00" + ":" + elements(0)
+          output(1) = "tomorrow"
+        }
+        else if (minutes.toInt <= elements(0).toInt) {
+          output(0) = hours + ":" + elements(0)
+          output(1) = "today"
+        }
+        else {
+          output(0) = (hours.toInt + 1).toString + ":" + elements(0)
+          output(1) = "today"
+        }
+
+      case x if elements(2).contains("minute") =>
         output(0) = hours + ":" + minutes
         output(1) = "today"
-      }
-      else if (hours.toInt == elements(1).toInt && minutes.toInt >= elements(0).toInt) {
-        output(0) = hours + ":" + minutes
-        output(1) = "today"
-      }
-      else if ((hours.toInt == elements(1).toInt + 1 && minutes.toInt >= elements(0).toInt) || hours.toInt > elements(1).toInt + 1) {
-        output(0) = elements(1) + ":" + elements(0)
-        output(1) = "tomorrow"
-      }
-      else {
-        output(0) = elements(1) + ":" + elements(0)
-        output(1) = "today"
-      }
+
+      case x if elements(2).contains("times") =>
+        if (hours.toInt == elements(1).toInt + 1 && minutes.toInt < elements(0).toInt) {
+          output(0) = hours + ":" + minutes
+          output(1) = "today"
+        }
+        else if (hours.toInt == elements(1).toInt && minutes.toInt >= elements(0).toInt) {
+          output(0) = hours + ":" + minutes
+          output(1) = "today"
+        }
+        else if ((hours.toInt == elements(1).toInt + 1 && minutes.toInt >= elements(0).toInt) || hours.toInt > elements(1).toInt + 1) {
+          output(0) = elements(1) + ":" + elements(0)
+          output(1) = "tomorrow"
+        }
+        else {
+          output(0) = elements(1) + ":" + elements(0)
+          output(1) = "today"
+        }
+
     }
     if (output(0).split(":")(0).length == 1) output(0) = "0" + output(0)
     if (output(0).split(":")(1).length == 1) output(0) = output(0).substring(0, 3) + "0" + output(0).substring(3)
