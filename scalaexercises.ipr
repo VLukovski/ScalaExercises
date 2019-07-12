@@ -37,6 +37,15 @@
     <mapping directory="" vcs="Git" />
   </component>
   <component name="libraryTable">
+    <library name="sbt: org.scala-lang.modules:scala-xml_2.13:1.2.0:jar">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang.modules/scala-xml_2.13/bundles/scala-xml_2.13-1.2.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang.modules/scala-xml_2.13/srcs/scala-xml_2.13-1.2.0-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="sbt: org.scala-lang:scala-library:2.13.0:jar" type="Scala">
       <properties>
         <language-level>Scala_2_13</language-level>
@@ -53,6 +62,33 @@
       <JAVADOC />
       <SOURCES>
         <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.13.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="sbt: org.scala-lang:scala-reflect:2.13.0:jar">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-reflect/jars/scala-reflect-2.13.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-reflect/srcs/scala-reflect-2.13.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="sbt: org.scalactic:scalactic_2.13:3.0.8:jar">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.ivy2/cache/org.scalactic/scalactic_2.13/bundles/scalactic_2.13-3.0.8.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.ivy2/cache/org.scalactic/scalactic_2.13/srcs/scalactic_2.13-3.0.8-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="sbt: org.scalatest:scalatest_2.13:3.0.8:jar">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.ivy2/cache/org.scalatest/scalatest_2.13/bundles/scalatest_2.13-3.0.8.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.ivy2/cache/org.scalatest/scalatest_2.13/srcs/scalatest_2.13-3.0.8-sources.jar!/" />
       </SOURCES>
     </library>
   </component>
