@@ -34,48 +34,43 @@ object Cron extends App {
     val elements = line.split(" ")
     val output = ListBuffer[String]("", "")
     elements(2) match {
-      case x if elements(2).contains("daily") =>
+      case x if x.contains("daily") =>
         output(0) = elements(1) + ":" + elements(0)
-        if (hours.toInt > elements(1).toInt) output(1) = "tomorrow"
-        else if (hours.toInt == elements(1).toInt && minutes.toInt > elements(0).toInt) output(1) = "tomorrow"
-        else output(1) = "today"
-
-      case x if elements(2).contains("hourly") =>
-        if (hours.toInt == 23) {
-          output(0) = "00" + ":" + elements(0)
-          output(1) = "tomorrow"
+        hours.toInt match {
+          case y if y > elements(1).toInt => output(1) = "tomorrow"
+          case y if y == elements(1).toInt && minutes.toInt > elements(0).toInt => output(1) = "tomorrow"
+          case _ => output(1) = "today"
         }
-        else if (minutes.toInt <= elements(0).toInt) {
-          output(0) = hours + ":" + elements(0)
-          output(1) = "today"
+      case x if x.contains("hourly") =>
+        hours.toInt match {
+          case 23 =>
+            output(0) = "00" + ":" + elements(0)
+            output(1) = "tomorrow"
+          case y if y <= elements(0).toInt =>
+            output(0) = hours + ":" + elements(0)
+            output(1) = "today"
+          case _ =>
+            output(0) = (hours.toInt + 1).toString + ":" + elements(0)
+            output(1) = "today"
         }
-        else {
-          output(0) = (hours.toInt + 1).toString + ":" + elements(0)
-          output(1) = "today"
-        }
-
-      case x if elements(2).contains("minute") =>
+      case x if x.contains("minute") =>
         output(0) = hours + ":" + minutes
         output(1) = "today"
-
-      case x if elements(2).contains("times") =>
-        if (hours.toInt == elements(1).toInt + 1 && minutes.toInt < elements(0).toInt) {
-          output(0) = hours + ":" + minutes
-          output(1) = "today"
+      case x if x.contains("times") =>
+        hours.toInt match {
+          case y if y == elements(1).toInt + 1 && minutes.toInt < elements(0).toInt =>
+            output(0) = hours + ":" + minutes
+            output(1) = "today"
+          case y if y == elements(1).toInt && minutes.toInt >= elements(0).toInt =>
+            output(0) = hours + ":" + minutes
+            output(1) = "today"
+          case y if (y == elements(1).toInt + 1 && minutes.toInt >= elements(0).toInt) || x > elements(1).toInt + 1 =>
+            output(0) = elements(1) + ":" + elements(0)
+            output(1) = "tomorrow"
+          case _ =>
+            output(0) = elements(1) + ":" + elements(0)
+            output(1) = "today"
         }
-        else if (hours.toInt == elements(1).toInt && minutes.toInt >= elements(0).toInt) {
-          output(0) = hours + ":" + minutes
-          output(1) = "today"
-        }
-        else if ((hours.toInt == elements(1).toInt + 1 && minutes.toInt >= elements(0).toInt) || hours.toInt > elements(1).toInt + 1) {
-          output(0) = elements(1) + ":" + elements(0)
-          output(1) = "tomorrow"
-        }
-        else {
-          output(0) = elements(1) + ":" + elements(0)
-          output(1) = "today"
-        }
-
     }
     if (output(0).split(":")(0).length == 1) output(0) = "0" + output(0)
     if (output(0).split(":")(1).length == 1) output(0) = output(0).substring(0, 3) + "0" + output(0).substring(3)
