@@ -2,7 +2,7 @@ package sample.iterator
 
 import sample.iterator.PointMass.{Force, Position, Velocity}
 
-case class PointMass(mass: Double, position: Position, velocity: Velocity, force: Force = Force(0, 0)) {
+case class PointMass(mass: Double, position: Position, velocity: Velocity = Velocity(0, 0), force: Force = Force(0, 0)) {
 
 }
 

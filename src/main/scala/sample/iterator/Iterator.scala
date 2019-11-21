@@ -31,7 +31,7 @@ object Iterator {
   @scala.annotation.tailrec
   private def forceCalc(objList: Seq[PointMass], obj: PointMass, gravConst: Double = 1.0): PointMass = {
     if (objList.nonEmpty) {
-      val distance = Math.max(Math.sqrt(Math.pow(objList.head.position.x - obj.position.x, 2) + Math.pow(objList.head.position.y - obj.position.y, 2)), 0.0000001)
+      val distance = Math.max(Math.sqrt(Math.pow(objList.head.position.x - obj.position.x, 2) + Math.pow(objList.head.position.y - obj.position.y, 2)), 2)
       forceCalc(
         objList.tail,
         obj.copy(force = Force(
