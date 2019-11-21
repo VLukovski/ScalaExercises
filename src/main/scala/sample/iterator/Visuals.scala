@@ -111,25 +111,25 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
     actionMap.put("up", new AbstractAction() {
       override def actionPerformed(e: ActionEvent): Unit = {
         if (isFollowing) isFollowing = false
-        offsetCoords = offsetCoords.copy(y = offsetCoords.y + 5)
+        offsetCoords = offsetCoords.copy(y = offsetCoords.y + 10)
       }
     })
     actionMap.put("down", new AbstractAction() {
       override def actionPerformed(e: ActionEvent): Unit = {
         if (isFollowing) isFollowing = false
-        offsetCoords = offsetCoords.copy(y = offsetCoords.y - 5)
+        offsetCoords = offsetCoords.copy(y = offsetCoords.y - 10)
       }
     })
     actionMap.put("left", new AbstractAction() {
       override def actionPerformed(e: ActionEvent): Unit = {
         if (isFollowing) isFollowing = false
-        offsetCoords = offsetCoords.copy(x = offsetCoords.x - 5)
+        offsetCoords = offsetCoords.copy(x = offsetCoords.x - 10)
       }
     })
     actionMap.put("right", new AbstractAction() {
       override def actionPerformed(e: ActionEvent): Unit = {
         if (isFollowing) isFollowing = false
-        offsetCoords = offsetCoords.copy(x = offsetCoords.x + 5)
+        offsetCoords = offsetCoords.copy(x = offsetCoords.x + 10)
       }
     })
   }
