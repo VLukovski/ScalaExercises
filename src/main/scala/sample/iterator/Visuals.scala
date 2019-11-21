@@ -1,7 +1,7 @@
 package sample.iterator
 
 import java.awt._
-import java.awt.event.ActionEvent
+import java.awt.event.{ActionEvent, KeyEvent}
 import java.awt.geom.Ellipse2D
 import java.awt.image.BufferedImage
 
@@ -14,6 +14,7 @@ import scala.swing.Dimension
 case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
 
   var offsetCoords: Position = objects(centerOn).position
+  var isFollowing: Boolean = false
 
   val trail: ListBuffer[Seq[Position]] = ListBuffer()
 
@@ -62,23 +63,27 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
   val constraints: GridBagConstraints = new GridBagConstraints()
 
   val buttonNext: JButton = new JButton("Next planet") {
+    setPreferredSize(new Dimension(150, 50))
     new AbstractAction() {
-      setPreferredSize(new Dimension(150, 50))
       addActionListener(this)
 
-      override def actionPerformed(e: ActionEvent): Unit =
+      override def actionPerformed(e: ActionEvent): Unit = {
         centerOn = (centerOn + 1) % objects.length
+        if (!isFollowing) isFollowing = true
+      }
     }
   }
 
   val buttonPrevious: JButton = new JButton("Previous planet") {
+    setPreferredSize(new Dimension(150, 50))
     new AbstractAction() {
-      setPreferredSize(new Dimension(150, 50))
       addActionListener(this)
 
-      override def actionPerformed(e: ActionEvent): Unit =
+      override def actionPerformed(e: ActionEvent): Unit = {
         centerOn = if (centerOn == 0) objects.length - 1
         else centerOn - 1
+        if (!isFollowing) isFollowing = true
+      }
     }
   }
 
@@ -95,6 +100,38 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
       }
       g.dispose()
     }
+
+    val inputMap: InputMap = getInputMap
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "up")
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "down")
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "left")
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "right")
+
+    val actionMap: ActionMap = getActionMap
+    actionMap.put("up", new AbstractAction() {
+      override def actionPerformed(e: ActionEvent): Unit = {
+        if (isFollowing) isFollowing = false
+        offsetCoords = offsetCoords.copy(y = offsetCoords.y + 5)
+      }
+    })
+    actionMap.put("down", new AbstractAction() {
+      override def actionPerformed(e: ActionEvent): Unit = {
+        if (isFollowing) isFollowing = false
+        offsetCoords = offsetCoords.copy(y = offsetCoords.y - 5)
+      }
+    })
+    actionMap.put("left", new AbstractAction() {
+      override def actionPerformed(e: ActionEvent): Unit = {
+        if (isFollowing) isFollowing = false
+        offsetCoords = offsetCoords.copy(x = offsetCoords.x - 5)
+      }
+    })
+    actionMap.put("right", new AbstractAction() {
+      override def actionPerformed(e: ActionEvent): Unit = {
+        if (isFollowing) isFollowing = false
+        offsetCoords = offsetCoords.copy(x = offsetCoords.x + 5)
+      }
+    })
   }
   addComponent(Box.createGlue(), gridx = 0, gridy = 0)
   addComponent(Box.createGlue(), gridx = 1, gridy = 0)
@@ -113,10 +150,10 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
   frame.setLocationRelativeTo(panel)
   frame.setVisible(true)
 
-  val timer = new Timer(10, (e: ActionEvent) => {
+  val timer = new Timer(10, (_: ActionEvent) => {
     trail.append(objects.map(_.position))
     if (trail.length > 200) trail.remove(0)
-    offsetCoords = objects(centerOn).position
+    if (isFollowing) offsetCoords = objects(centerOn).position
     frame.repaint()
   })
 
