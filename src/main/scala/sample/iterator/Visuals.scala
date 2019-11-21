@@ -1,7 +1,7 @@
 package sample.iterator
 
 import java.awt._
-import java.awt.event.{ActionEvent, KeyEvent}
+import java.awt.event.{ActionEvent, InputEvent, KeyEvent}
 import java.awt.geom.Ellipse2D
 import java.awt.image.BufferedImage
 
@@ -106,6 +106,10 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "down")
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "left")
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "right")
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.VK_LEFT), "upLeft")
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.VK_RIGHT), "upRight")
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.VK_LEFT), "downLeft")
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT), "downRight")
 
     val actionMap: ActionMap = getActionMap
     actionMap.put("up", new AbstractAction() {
@@ -130,6 +134,30 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
       override def actionPerformed(e: ActionEvent): Unit = {
         if (isFollowing) isFollowing = false
         offsetCoords = offsetCoords.copy(x = offsetCoords.x + 10)
+      }
+    })
+    actionMap.put("upLeft", new AbstractAction() {
+      override def actionPerformed(e: ActionEvent): Unit = {
+        if (isFollowing) isFollowing = false
+        offsetCoords = Position(x = offsetCoords.x - 7.071, y = offsetCoords.y + 7.071)
+      }
+    })
+    actionMap.put("upRight", new AbstractAction() {
+      override def actionPerformed(e: ActionEvent): Unit = {
+        if (isFollowing) isFollowing = false
+        offsetCoords = Position(x = offsetCoords.x + 7.071, y = offsetCoords.y + 7.071)
+      }
+    })
+    actionMap.put("downLeft", new AbstractAction() {
+      override def actionPerformed(e: ActionEvent): Unit = {
+        if (isFollowing) isFollowing = false
+        offsetCoords = Position(x = offsetCoords.x - 7.071, y = offsetCoords.y - 7.071)
+      }
+    })
+    actionMap.put("downRight", new AbstractAction() {
+      override def actionPerformed(e: ActionEvent): Unit = {
+        if (isFollowing) isFollowing = false
+        offsetCoords = Position(x = offsetCoords.x + 7.071, y = offsetCoords.y - 7.071)
       }
     })
   }
