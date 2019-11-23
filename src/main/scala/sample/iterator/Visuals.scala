@@ -135,11 +135,21 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
       val widthHalved: Double = getWidth / 2
       val heightHalved: Double = getHeight / 2
       objects.zipWithIndex.foreach { case (obj, i) =>
-        g.drawImage(planetImages(i)._1, (obj.position.x + widthHalved - planetImages(i)._2 / 2 - offsetCoords.x).toInt, (-obj.position.y + heightHalved - planetImages(i)._2 / 2 + offsetCoords.y).toInt, null)
+        g.drawImage(
+          planetImages(i)._1,
+          (obj.position.x + widthHalved - planetImages(i)._2 / 2 - offsetCoords.x).toInt,
+          (-obj.position.y + heightHalved - planetImages(i)._2 / 2 + offsetCoords.y).toInt,
+          null
+        )
       }
       trail.foreach {
         _.zipWithIndex.foreach { case (pos, i) =>
-          g.drawImage(planetImages(i)._3, (pos.x + widthHalved - 1 - offsetCoords.x).toInt, (-pos.y + heightHalved - 1 + offsetCoords.y).toInt, null)
+          g.drawImage(
+            planetImages(i)._3,
+            (pos.x + widthHalved - 1 - offsetCoords.x).toInt,
+            (-pos.y + heightHalved - 1 + offsetCoords.y).toInt,
+            null
+          )
         }
       }
       if (showGrid) {
@@ -147,8 +157,18 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
         val dashed: Stroke = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, Array[Float](10), 0)
         g2d.setStroke(dashed)
         for (i <- 0 to 10; j <- 0 to 6) {
-          g2d.drawLine((-gridScale - offsetCoords.x % gridScale).toInt, (gridScale * (j - 1) + offsetCoords.y % gridScale).toInt, (gridScale * 20 - offsetCoords.x % gridScale).toInt, (gridScale * (j - 1) + offsetCoords.y % gridScale).toInt)
-          g2d.drawLine((gridScale * (i - 1) - offsetCoords.x % gridScale).toInt, (-gridScale + offsetCoords.y % gridScale).toInt, (gridScale * (i - 1) - offsetCoords.x % gridScale).toInt, (gridScale * 12 + offsetCoords.y % gridScale).toInt)
+          g2d.drawLine(
+            (-gridScale - offsetCoords.x % gridScale).toInt,
+            (gridScale * j + offsetCoords.y % gridScale).toInt,
+            (gridScale * 11 - offsetCoords.x % gridScale).toInt,
+            (gridScale * j + offsetCoords.y % gridScale).toInt
+          )
+          g2d.drawLine(
+            (gridScale * i - offsetCoords.x % gridScale).toInt,
+            (-gridScale + offsetCoords.y % gridScale).toInt,
+            (gridScale * i - offsetCoords.x % gridScale).toInt,
+            (gridScale * 7 + offsetCoords.y % gridScale).toInt
+          )
         }
         g2d.dispose()
       }
