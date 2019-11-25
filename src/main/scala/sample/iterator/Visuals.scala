@@ -15,7 +15,6 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
   var offsetCoords: Position = objects(centerOn).position
   var isFollowing: Boolean = true
   var showGrid: Boolean = false
-  var frameTime: Double = 10
   val movementKeys: ListBuffer[Boolean] = ListBuffer(false, false, false, false)
   val trail: ListBuffer[Seq[Position]] = ListBuffer()
 
@@ -174,8 +173,9 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
       }
       g.dispose()
       while (System.nanoTime() - time < 10000000) {}
-      frameTime = BigDecimal((System.nanoTime() - time) / 1000000.0).setScale(1, BigDecimal.RoundingMode.HALF_UP).toDouble
-      if (frameTime > 10) frameTimer.setDelay(frameTime.toInt)
+      val frameTime = BigDecimal((System.nanoTime() - time) / 1000000.0).setScale(1, BigDecimal.RoundingMode.HALF_UP).toDouble
+      fps.setText(frameTime.toString + "ms")
+      frameTimer.setDelay(frameTime.toInt)
     }
   }
 
@@ -215,9 +215,8 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
     if (trail.length > 200) trail.remove(0)
     if (!isFollowing) moveCamera()
   })
-  val frameTimer = new Timer(frameTime.toInt, (_: ActionEvent) => {
+  val frameTimer = new Timer(10, (_: ActionEvent) => {
     if (isFollowing) offsetCoords = objects(centerOn).position
-    fps.setText(frameTime.toString + "ms")
     frame.repaint()
   })
 
