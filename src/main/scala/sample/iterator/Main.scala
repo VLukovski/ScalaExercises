@@ -28,12 +28,17 @@ object Main {
       PointMass(
         mass = 50,
         position = Position(40, 40),
-        velocity = Velocity(-42, 35)
+        velocity = Velocity(-43, 35)
       ),
       PointMass(
         mass = 500,
-        position = Position(500, 500),
-        velocity = Velocity(-11, 5)
+        position = Position(700, 0),
+        velocity = Velocity(0, 12)
+      ),
+      PointMass(
+        mass = 150,
+        position = Position(725, -25),
+        velocity = Velocity(3, 14)
       )
     )
 

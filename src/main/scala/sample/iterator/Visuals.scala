@@ -165,7 +165,7 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
       }
       if (showGrid) {
         val g2d = g.create.asInstanceOf[Graphics2D]
-        val dashed: Stroke = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, Array[Float](10), 0)
+        val dashed: Stroke = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, Array[Float](10), 15)
         g2d.setStroke(dashed)
         for (i <- 0 to 10; j <- 0 to 6) {
           g2d.drawLine(

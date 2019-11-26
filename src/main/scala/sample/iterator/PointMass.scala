@@ -1,8 +1,8 @@
 package sample.iterator
 
-import sample.iterator.PointMass.{Force, Position, Velocity}
+import sample.iterator.PointMass.{Acceleration, Position, Velocity}
 
-case class PointMass(mass: Double, position: Position, velocity: Velocity = Velocity(0, 0), force: Force = Force(0, 0)) {
+case class PointMass(mass: Double, position: Position, velocity: Velocity = Velocity(0, 0), accel: Acceleration = Acceleration(0, 0)) {
 
 }
 
@@ -18,12 +18,18 @@ object PointMass {
       Velocity(this.x + that.x, this.y + that.y)
   }
 
-  case class Force(x: Double, y: Double) {
-    def +(that: Force) =
-      Force(this.x + that.x, this.y + that.y)
+  case class Acceleration(x: Double, y: Double) {
+    def +(that: Acceleration) =
+      Acceleration(this.x + that.x, this.y + that.y)
+
+    def -(that: Acceleration) =
+      Acceleration(this.x - that.x, this.y - that.y)
+
+    def /(that: Double) =
+      Acceleration(this.x / that, this.y / that)
 
     def flip =
-      Force(-this.x, -this.y)
+      Acceleration(-this.x, -this.y)
   }
 
 }
