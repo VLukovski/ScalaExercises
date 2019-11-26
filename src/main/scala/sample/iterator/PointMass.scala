@@ -8,10 +8,22 @@ case class PointMass(mass: Double, position: Position, velocity: Velocity = Velo
 
 object PointMass {
 
-  case class Position(x: Double, y: Double)
+  case class Position(x: Double, y: Double) {
+    def +(that: Position) =
+      Position(this.x + that.x, this.y + that.y)
+  }
 
-  case class Velocity(x: Double, y: Double)
+  case class Velocity(x: Double, y: Double) {
+    def +(that: Velocity) =
+      Velocity(this.x + that.x, this.y + that.y)
+  }
 
-  case class Force(x: Double, y: Double)
+  case class Force(x: Double, y: Double) {
+    def +(that: Force) =
+      Force(this.x + that.x, this.y + that.y)
+
+    def flip =
+      Force(-this.x, -this.y)
+  }
 
 }

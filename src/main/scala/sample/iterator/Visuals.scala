@@ -1,7 +1,7 @@
 package sample.iterator
 
 import java.awt._
-import java.awt.event.{ActionEvent, KeyEvent, KeyListener}
+import java.awt.event._
 import java.awt.geom.Ellipse2D
 import java.awt.image.BufferedImage
 
@@ -16,10 +16,13 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
   var isFollowing: Boolean = true
   var showGrid: Boolean = false
   val movementKeys: ListBuffer[Boolean] = ListBuffer(false, false, false, false)
+  val zoomKeys: ListBuffer[Boolean] = ListBuffer(false, false)
   val trail: ListBuffer[Seq[Position]] = ListBuffer()
+  var zoom: Double = 1.0
 
-  val planetImages: Seq[(BufferedImage, Double, BufferedImage)] = objects.map { obj =>
-    val width: Double = Math.pow(obj.mass, 1.0 / 3) + 10
+
+  def planetConstantsGenerator: Seq[(BufferedImage, Double, BufferedImage)] = objects.map { obj =>
+    val width: Double = (Math.pow(obj.mass, 1.0 / 3) + 10) * zoom
 
     val image: BufferedImage = {
       val canvas = new BufferedImage(width.ceil.toInt, width.ceil.toInt, BufferedImage.TYPE_INT_ARGB)
@@ -44,6 +47,8 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
     (image, width, trail)
   }
 
+  var planetConstants: Seq[(BufferedImage, Double, BufferedImage)] = planetConstantsGenerator
+
   def addComponent(component: Component, anchor: Int = GridBagConstraints.PAGE_START, gridx: Int, gridy: Int, gridheight: Int = 1, gridwidth: Int = 1, weightx: Double = 1.0, weighty: Double = 1.0, fill: Int = GridBagConstraints.NONE): Unit = {
     constraints.anchor = anchor
     constraints.gridx = gridx
@@ -56,8 +61,9 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
     frame.add(component, constraints)
   }
 
-  val frame: JFrame = new JFrame with KeyListener {
+  val frame: JFrame = new JFrame with KeyListener with MouseWheelListener {
     addKeyListener(this)
+    addMouseWheelListener(this)
 
     override protected def keyTyped(e: KeyEvent): Unit = {}
 
@@ -76,6 +82,12 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
       else if (key == KeyEvent.VK_DOWN) movementKeys(1) = false
       else if (key == KeyEvent.VK_RIGHT) movementKeys(2) = false
       else if (key == KeyEvent.VK_LEFT) movementKeys(3) = false
+    }
+
+    override protected def mouseWheelMoved(e: MouseWheelEvent): Unit = {
+      val scrollUnits = e.getWheelRotation
+      zoom = BigDecimal(zoom * Math.pow(1.1, -scrollUnits)).setScale(10, BigDecimal.RoundingMode.HALF_UP).toDouble
+      planetConstants = planetConstantsGenerator
     }
   }
   frame.setLayout(new GridBagLayout)
@@ -135,18 +147,18 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
       val heightHalved: Double = getHeight / 2
       objects.zipWithIndex.foreach { case (obj, i) =>
         g.drawImage(
-          planetImages(i)._1,
-          (obj.position.x + widthHalved - planetImages(i)._2 / 2 - offsetCoords.x).toInt,
-          (-obj.position.y + heightHalved - planetImages(i)._2 / 2 + offsetCoords.y).toInt,
+          planetConstants(i)._1,
+          ((obj.position.x - offsetCoords.x) * zoom + widthHalved - planetConstants(i)._2 / 2).toInt,
+          ((-obj.position.y + offsetCoords.y) * zoom + heightHalved - planetConstants(i)._2 / 2).toInt,
           null
         )
       }
       trail.foreach {
         _.zipWithIndex.foreach { case (pos, i) =>
           g.drawImage(
-            planetImages(i)._3,
-            (pos.x + widthHalved - 1 - offsetCoords.x).toInt,
-            (-pos.y + heightHalved - 1 + offsetCoords.y).toInt,
+            planetConstants(i)._3,
+            ((pos.x - offsetCoords.x) * zoom + widthHalved - 1).toInt,
+            ((-pos.y + offsetCoords.y) * zoom + heightHalved - 1).toInt,
             null
           )
         }
@@ -157,16 +169,16 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
         g2d.setStroke(dashed)
         for (i <- 0 to 10; j <- 0 to 6) {
           g2d.drawLine(
-            (-gridScale - offsetCoords.x % gridScale).toInt,
-            (gridScale * j + offsetCoords.y % gridScale).toInt,
-            (gridScale * 11 - offsetCoords.x % gridScale).toInt,
-            (gridScale * j + offsetCoords.y % gridScale).toInt
+            (-gridScale - (offsetCoords.x * zoom % gridScale)).toInt,
+            (gridScale * j + (offsetCoords.y * zoom % gridScale)).toInt,
+            (gridScale * 11 - (offsetCoords.x * zoom % gridScale)).toInt,
+            (gridScale * j + (offsetCoords.y * zoom % gridScale)).toInt
           )
           g2d.drawLine(
-            (gridScale * i - offsetCoords.x % gridScale).toInt,
-            (-gridScale + offsetCoords.y % gridScale).toInt,
-            (gridScale * i - offsetCoords.x % gridScale).toInt,
-            (gridScale * 7 + offsetCoords.y % gridScale).toInt
+            (gridScale * i - (offsetCoords.x * zoom % gridScale)).toInt,
+            (-gridScale + (offsetCoords.y * zoom % gridScale)).toInt,
+            (gridScale * i - (offsetCoords.x * zoom % gridScale)).toInt,
+            (gridScale * 7 + (offsetCoords.y * zoom % gridScale)).toInt
           )
         }
         g2d.dispose()
