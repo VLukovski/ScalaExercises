@@ -43,13 +43,13 @@ object Main {
       ),
       PointMass(
         mass = 500,
-        position = Position(-1000, 25),
-        velocity = Velocity(10, 0)
+        position = Position(-500, 70),
+        velocity = Velocity(20, 0)
       )
     )
 
 
-    iterate(objects, 0.000025, 1000000000, Visuals(objects, 0))
+    iterate(objects, 0.0001, 1000000000, Visuals(objects, 0))
 
   }
 }

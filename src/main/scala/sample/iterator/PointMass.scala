@@ -13,6 +13,9 @@ object PointMass {
     def +(that: Position) =
       Position(this.x + that.x, this.y + that.y)
 
+    def +(that: Velocity) =
+      Position(this.x + that.x, this.y + that.y)
+
     def -(that: Position) =
       Position(this.x - that.x, this.y - that.y)
 
@@ -27,8 +30,14 @@ object PointMass {
     def -(that: Velocity) =
       Velocity(this.x - that.x, this.y - that.y)
 
-    def dot(that: Velocity) =
-      Velocity(this.x * that.x, this.y * that.y)
+    def /(that: Double) =
+      Velocity(this.x / that, this.y / that)
+
+    def *(that: Double) =
+      Velocity(this.x * that, this.y * that)
+
+    def dot(that: Velocity): Double =
+      this.x * that.x + this.y * that.y
   }
 
   case class Acceleration(x: Double, y: Double) {

@@ -60,12 +60,7 @@ object Iterator {
     val array = lists._1.toBuffer
     lists._1.zipWithIndex.foreach { case (obj1, i) =>
       lists._1.drop(i + 1).zip(lists._2(i)).foreach { case (obj2, dist) =>
-        if (obj1.width + obj2.width >= dist * 2 && obj1.velocity ) {
-          //          val collisionPoint: Position = Position(
-          //            ((obj1.position.x * obj2.width) + (obj2.position.x * obj1.width)) / (obj1.width + obj2.width),
-          //            ((obj1.position.y * obj2.width) + (obj2.position.y * obj1.width)) / (obj1.width + obj2.width)
-          //          )
-
+        if (obj1.width + obj2.width >= dist * 2) {
           val newVel1: Velocity = Velocity(
             (obj1.velocity.x * (obj1.mass - obj2.mass) + (2 * obj2.mass * obj2.velocity.x)) / (obj1.mass + obj2.mass),
             (obj1.velocity.y * (obj1.mass - obj2.mass) + (2 * obj2.mass * obj2.velocity.y)) / (obj1.mass + obj2.mass)
@@ -75,8 +70,8 @@ object Iterator {
             (obj2.velocity.y * (obj2.mass - obj1.mass) + (2 * obj1.mass * obj1.velocity.y)) / (obj2.mass + obj1.mass)
           )
 
-          array(i) = array(i).copy(velocity = obj1.velocity + newVel1)
-          array(lists._1.indexOf(obj2)) = obj2.copy(velocity = obj2.velocity + newVel2)
+          array(i) = array(i).copy(velocity = newVel1, position = obj1.position + newVel1 * timeStep)
+          array(lists._1.indexOf(obj2)) = obj2.copy(velocity = newVel2, position = obj2.position + newVel2 * timeStep)
         }
       }
     }
