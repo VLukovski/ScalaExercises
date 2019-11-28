@@ -21,21 +21,20 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
   var zoom: Double = 1.0
 
 
-  def planetConstantsGenerator: Seq[(BufferedImage, Double, BufferedImage)] = objects.map { obj =>
-    val width: Double = (Math.pow(obj.mass, 1.0 / 3) + 10) * zoom
+  def planetConstantsGenerator: Seq[(BufferedImage, BufferedImage)] = objects.map { obj =>
 
     val image: BufferedImage = {
-      val canvas = new BufferedImage(width.ceil.toInt, width.ceil.toInt, BufferedImage.TYPE_INT_ARGB)
+      val canvas = new BufferedImage((obj.width * zoom).ceil.toInt, (obj.width * zoom).ceil.toInt, BufferedImage.TYPE_INT_ARGB)
       val g = canvas.createGraphics()
       g.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
       g.setColor(Color.BLACK)
-      g.fill(new Ellipse2D.Double(0, 0, width, width))
+      g.fill(new Ellipse2D.Double(0, 0, obj.width * zoom, obj.width * zoom))
       g.dispose()
       canvas
     }
 
     val trail: BufferedImage = {
-      val canvas = new BufferedImage(width.ceil.toInt, width.ceil.toInt, BufferedImage.TYPE_INT_ARGB)
+      val canvas = new BufferedImage((obj.width * zoom).ceil.toInt, (obj.width * zoom).ceil.toInt, BufferedImage.TYPE_INT_ARGB)
       val g = canvas.createGraphics()
       g.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
       g.setColor(Color.BLACK)
@@ -44,10 +43,10 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
       canvas
     }
 
-    (image, width, trail)
+    (image, trail)
   }
 
-  var planetConstants: Seq[(BufferedImage, Double, BufferedImage)] = planetConstantsGenerator
+  var planetConstants: Seq[(BufferedImage, BufferedImage)] = planetConstantsGenerator
 
   def addComponent(component: Component, anchor: Int = GridBagConstraints.PAGE_START, gridx: Int, gridy: Int, gridheight: Int = 1, gridwidth: Int = 1, weightx: Double = 1.0, weighty: Double = 1.0, fill: Int = GridBagConstraints.NONE): Unit = {
     constraints.anchor = anchor
@@ -148,15 +147,15 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
       objects.zipWithIndex.foreach { case (obj, i) =>
         g.drawImage(
           planetConstants(i)._1,
-          ((obj.position.x - offsetCoords.x) * zoom + widthHalved - planetConstants(i)._2 / 2).toInt,
-          ((-obj.position.y + offsetCoords.y) * zoom + heightHalved - planetConstants(i)._2 / 2).toInt,
+          ((obj.position.x - offsetCoords.x - obj.width / 2) * zoom + widthHalved).toInt,
+          ((-obj.position.y + offsetCoords.y - obj.width / 2) * zoom + heightHalved).toInt,
           null
         )
       }
       trail.foreach {
         _.zipWithIndex.foreach { case (pos, i) =>
           g.drawImage(
-            planetConstants(i)._3,
+            planetConstants(i)._2,
             ((pos.x - offsetCoords.x) * zoom + widthHalved - 1).toInt,
             ((-pos.y + offsetCoords.y) * zoom + heightHalved - 1).toInt,
             null

@@ -1,5 +1,6 @@
 package sample.iterator
 
+import sample.iterator
 import sample.iterator.Iterator.iterate
 import sample.iterator.PointMass.{Position, Velocity}
 
@@ -39,11 +40,16 @@ object Main {
         mass = 150,
         position = Position(725, -25),
         velocity = Velocity(3, 14)
+      ),
+      PointMass(
+        mass = 500,
+        position = Position(-1000, 25),
+        velocity = Velocity(10, 0)
       )
     )
 
 
-    iterate(objects, 0.00005, 1000000000, Visuals(objects, 0))
+    iterate(objects, 0.000025, 1000000000, Visuals(objects, 0))
 
   }
 }
