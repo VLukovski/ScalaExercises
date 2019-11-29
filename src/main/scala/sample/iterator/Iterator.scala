@@ -1,6 +1,6 @@
 package sample.iterator
 
-import sample.iterator.PointMass.{Acceleration, Position, Velocity}
+import sample.iterator.PointMass.Vector2D
 
 object Iterator {
 
@@ -12,7 +12,7 @@ object Iterator {
         velocityPositionCalc(
           collisionCalc(
             accelCalc(
-              objList = objects.map(_.copy(accel = Acceleration(0, 0))),
+              objList = objects.map(_.copy(accel = Vector2D(0, 0))),
               distanceList = calcDistances(objects),
               gravConst = gravity
             ),
@@ -38,8 +38,8 @@ object Iterator {
   @scala.annotation.tailrec
   private def accelCalc(objList: Seq[PointMass], returnObjList: Seq[PointMass] = Seq[PointMass](), distanceList: Seq[Seq[Double]], gravConst: Double): (Seq[PointMass], Seq[Seq[Double]]) = {
     if (objList.nonEmpty) {
-      val diffs: Seq[Acceleration] = objList.tail.zip(distanceList(returnObjList.length)).map { case (obj, dist) =>
-        Acceleration(
+      val diffs: Seq[Vector2D] = objList.tail.zip(distanceList(returnObjList.length)).map { case (obj, dist) =>
+        Vector2D(
           (-gravConst * obj.mass * objList.head.mass * (-objList.head.position.x + obj.position.x)) / (dist * dist * dist),
           (-gravConst * obj.mass * objList.head.mass * (-objList.head.position.y + obj.position.y)) / (dist * dist * dist)
         )
@@ -49,7 +49,7 @@ object Iterator {
         obj.copy(accel = obj.accel + diff)
       }
 
-      val updatedHead: PointMass = objList.head.copy(accel = (objList.head.accel - diffs.foldLeft(Acceleration(0, 0))(_ + _)) / objList.head.mass)
+      val updatedHead: PointMass = objList.head.copy(accel = (objList.head.accel - diffs.foldLeft(Vector2D(0, 0))(_ + _)) / objList.head.mass)
 
       accelCalc(updatedObjList, returnObjList.appended(updatedHead), distanceList, gravConst)
     }
@@ -61,14 +61,10 @@ object Iterator {
     lists._1.zipWithIndex.foreach { case (obj1, i) =>
       lists._1.drop(i + 1).zip(lists._2(i)).foreach { case (obj2, dist) =>
         if (obj1.width + obj2.width >= dist * 2) {
-          val newVel1: Velocity = Velocity(
-            (obj1.velocity.x * (obj1.mass - obj2.mass) + (2 * obj2.mass * obj2.velocity.x)) / (obj1.mass + obj2.mass),
-            (obj1.velocity.y * (obj1.mass - obj2.mass) + (2 * obj2.mass * obj2.velocity.y)) / (obj1.mass + obj2.mass)
-          )
-          val newVel2: Velocity = Velocity(
-            (obj2.velocity.x * (obj2.mass - obj1.mass) + (2 * obj1.mass * obj1.velocity.x)) / (obj2.mass + obj1.mass),
-            (obj2.velocity.y * (obj2.mass - obj1.mass) + (2 * obj1.mass * obj1.velocity.y)) / (obj2.mass + obj1.mass)
-          )
+          val newVel1: Vector2D = obj1.velocity - (obj1.position - obj2.position) * 2 * obj2.mass / (obj1.mass + obj2.mass) * (obj1.velocity - obj2.velocity).dot(obj1.position - obj2.position) / (dist * dist)
+          val newVel2: Vector2D = obj2.velocity - (obj2.position - obj1.position) * 2 * obj1.mass / (obj2.mass + obj1.mass) * (obj2.velocity - obj1.velocity).dot(obj2.position - obj1.position) / (dist * dist)
+
+
 
           array(i) = array(i).copy(velocity = newVel1, position = obj1.position + newVel1 * timeStep)
           array(lists._1.indexOf(obj2)) = obj2.copy(velocity = newVel2, position = obj2.position + newVel2 * timeStep)
@@ -81,11 +77,11 @@ object Iterator {
   private def velocityPositionCalc(objList: Seq[PointMass], timeStep: Double): Seq[PointMass] = {
     objList.map { obj =>
       obj.copy(
-        velocity = Velocity(
+        velocity = Vector2D(
           obj.velocity.x + obj.accel.x * timeStep,
           obj.velocity.y + obj.accel.y * timeStep
         ),
-        position = Position(
+        position = Vector2D(
           obj.position.x + obj.velocity.x * timeStep,
           obj.position.y + obj.velocity.y * timeStep
         )

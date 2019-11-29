@@ -6,18 +6,18 @@ import java.awt.geom.Ellipse2D
 import java.awt.image.BufferedImage
 
 import javax.swing._
-import sample.iterator.PointMass.Position
+import sample.iterator.PointMass.Vector2D
 
 import scala.collection.mutable.ListBuffer
 
 case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
 
-  var offsetCoords: Position = objects(centerOn).position
+  var offsetCoords: Vector2D = objects(centerOn).position
   var isFollowing: Boolean = true
   var showGrid: Boolean = false
   val movementKeys: ListBuffer[Boolean] = ListBuffer(false, false, false, false)
   val zoomKeys: ListBuffer[Boolean] = ListBuffer(false, false)
-  val trail: ListBuffer[Seq[Position]] = ListBuffer()
+  val trail: ListBuffer[Seq[Vector2D]] = ListBuffer()
   var zoom: Double = 1.0
 
 
@@ -192,14 +192,14 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
 
   def moveCamera(): Unit = {
     (movementKeys(0), movementKeys(1), movementKeys(2), movementKeys(3)) match {
-      case (true, false, false, true) => offsetCoords = Position(offsetCoords.x - 7.07, offsetCoords.y + 7.07)
-      case (true, false, true, false) => offsetCoords = Position(offsetCoords.x + 7.07, offsetCoords.y + 7.07)
-      case (false, true, false, true) => offsetCoords = Position(offsetCoords.x - 7.07, offsetCoords.y - 7.07)
-      case (false, true, true, false) => offsetCoords = Position(offsetCoords.x + 7.07, offsetCoords.y - 7.07)
-      case (true, false, _, _) => offsetCoords = Position(offsetCoords.x, offsetCoords.y + 10)
-      case (false, true, _, _) => offsetCoords = Position(offsetCoords.x, offsetCoords.y - 10)
-      case (_, _, true, false) => offsetCoords = Position(offsetCoords.x + 10, offsetCoords.y)
-      case (_, _, false, true) => offsetCoords = Position(offsetCoords.x - 10, offsetCoords.y)
+      case (true, false, false, true) => offsetCoords = Vector2D(offsetCoords.x - 7.07, offsetCoords.y + 7.07)
+      case (true, false, true, false) => offsetCoords = Vector2D(offsetCoords.x + 7.07, offsetCoords.y + 7.07)
+      case (false, true, false, true) => offsetCoords = Vector2D(offsetCoords.x - 7.07, offsetCoords.y - 7.07)
+      case (false, true, true, false) => offsetCoords = Vector2D(offsetCoords.x + 7.07, offsetCoords.y - 7.07)
+      case (true, false, _, _) => offsetCoords = Vector2D(offsetCoords.x, offsetCoords.y + 10)
+      case (false, true, _, _) => offsetCoords = Vector2D(offsetCoords.x, offsetCoords.y - 10)
+      case (_, _, true, false) => offsetCoords = Vector2D(offsetCoords.x + 10, offsetCoords.y)
+      case (_, _, false, true) => offsetCoords = Vector2D(offsetCoords.x - 10, offsetCoords.y)
       case (_, _, _, _) =>
     }
   }
