@@ -85,7 +85,7 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
 
     override protected def mouseWheelMoved(e: MouseWheelEvent): Unit = {
       val scrollUnits = e.getWheelRotation
-      zoom = BigDecimal(zoom * Math.pow(1.1, -scrollUnits)).setScale(10, BigDecimal.RoundingMode.HALF_UP).toDouble
+      zoom = BigDecimal(zoom * Math.pow(1.05, -scrollUnits)).setScale(10, BigDecimal.RoundingMode.HALF_UP).toDouble
       planetConstants = planetConstantsGenerator
     }
   }
