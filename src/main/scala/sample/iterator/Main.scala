@@ -48,42 +48,43 @@ object Main {
     //        velocity = Vector2D(20, 0)
     //      )
     //    )
-    val n: Int = 15
+    val n: Int = 6
+    val m: Int = 12
 
     val objects: ArrayBuffer[PointMass] = ArrayBuffer(
       PointMass(
         mass = 10000,
-        position = Vector2D(-500, -1000 + 10.05 + 30.15 * n * 5),
+        position = Vector2D(-1000, 25.05 + 75.15 * n * m),
         velocity = Vector2D(40000, 0),
+        width = Some(500)
+      ),
+      PointMass(
+        mass = 5000,
+        position = Vector2D(-1000, -2000 + 25.05 + 75.15 * n * m),
+        velocity = Vector2D(40000, 40000),
         width = Some(150)
       ),
       PointMass(
-        mass = 10000,
-        position = Vector2D(-500, 1000 + 10.05 + 30.15 * n * 5),
-        velocity = Vector2D(40000, 0),
-        width = Some(150)
-      ),
-      PointMass(
-        mass = 10000,
-        position = Vector2D(-500, 10.05 + 30.15 * n * 5),
-        velocity = Vector2D(40000, 0),
+        mass = 5000,
+        position = Vector2D(-1000, 2000 + 25.05 + 75.15 * n * m),
+        velocity = Vector2D(40000, -40000),
         width = Some(150)
       )
     )
 
 
     Range(0, n).foreach { i =>
-      Range(0, n * 5).foreach { j =>
+      Range(0, n * m).foreach { j =>
         objects.append(
           PointMass(
             mass = 100,
-            position = Vector2D(0 + 17.9 * i, (20.1 + 30.15 * i - 40.2 * (i % 2)) % 60.3 + 60.3 * j),
-            width = Some(20)
+            position = Vector2D(0 + 44.75 * i, (50.1 + 75.15 * i - 100.2 * (i % 2)) % 150.3 + 150.3 * j),
+            width = Some(50)
           ),
           PointMass(
             mass = 100,
-            position = Vector2D(0 + 17.9 * i, (30.15 * i - 20.1 * (i % 2)) % 60.3 + 60.3 * j + 40.2),
-            width = Some(20)
+            position = Vector2D(0 + 44.75 * i, (75.15 * i - 50.1 * (i % 2)) % 150.3 + 150.3 * j + 100.2),
+            width = Some(50)
           )
         )
       }

@@ -86,7 +86,6 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
     override protected def mouseWheelMoved(e: MouseWheelEvent): Unit = {
       val scrollUnits = e.getWheelRotation
       zoom = BigDecimal(zoom * Math.pow(1.05, -scrollUnits)).setScale(10, BigDecimal.RoundingMode.HALF_UP).toDouble
-      planetConstants = planetConstantsGenerator
     }
   }
   frame.setLayout(new GridBagLayout)
@@ -149,6 +148,8 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
           planetConstants(i)._1,
           ((obj.position.x - offsetCoords.x - obj.width / 2) * zoom + widthHalved).toInt,
           ((-obj.position.y + offsetCoords.y - obj.width / 2) * zoom + heightHalved).toInt,
+          (obj.width * zoom).ceil.toInt,
+          (obj.width * zoom).ceil.toInt,
           null
         )
       }
@@ -192,14 +193,14 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
 
   def moveCamera(): Unit = {
     (movementKeys(0), movementKeys(1), movementKeys(2), movementKeys(3)) match {
-      case (true, false, false, true) => offsetCoords = Vector2D(offsetCoords.x - 7.07, offsetCoords.y + 7.07)
-      case (true, false, true, false) => offsetCoords = Vector2D(offsetCoords.x + 7.07, offsetCoords.y + 7.07)
-      case (false, true, false, true) => offsetCoords = Vector2D(offsetCoords.x - 7.07, offsetCoords.y - 7.07)
-      case (false, true, true, false) => offsetCoords = Vector2D(offsetCoords.x + 7.07, offsetCoords.y - 7.07)
-      case (true, false, _, _) => offsetCoords = Vector2D(offsetCoords.x, offsetCoords.y + 10)
-      case (false, true, _, _) => offsetCoords = Vector2D(offsetCoords.x, offsetCoords.y - 10)
-      case (_, _, true, false) => offsetCoords = Vector2D(offsetCoords.x + 10, offsetCoords.y)
-      case (_, _, false, true) => offsetCoords = Vector2D(offsetCoords.x - 10, offsetCoords.y)
+      case (true, false, false, true) => offsetCoords = Vector2D(offsetCoords.x - 7.07 / zoom, offsetCoords.y + 7.07 / zoom)
+      case (true, false, true, false) => offsetCoords = Vector2D(offsetCoords.x + 7.07 / zoom, offsetCoords.y + 7.07 / zoom)
+      case (false, true, false, true) => offsetCoords = Vector2D(offsetCoords.x - 7.07 / zoom, offsetCoords.y - 7.07 / zoom)
+      case (false, true, true, false) => offsetCoords = Vector2D(offsetCoords.x + 7.07 / zoom, offsetCoords.y - 7.07 / zoom)
+      case (true, false, _, _) => offsetCoords = Vector2D(offsetCoords.x, offsetCoords.y + 10 / zoom)
+      case (false, true, _, _) => offsetCoords = Vector2D(offsetCoords.x, offsetCoords.y - 10 / zoom)
+      case (_, _, true, false) => offsetCoords = Vector2D(offsetCoords.x + 10 / zoom, offsetCoords.y)
+      case (_, _, false, true) => offsetCoords = Vector2D(offsetCoords.x - 10 / zoom, offsetCoords.y)
       case (_, _, _, _) =>
     }
   }
@@ -222,8 +223,8 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
   frame.setVisible(true)
 
   val staticTimer = new Timer(10, (_: ActionEvent) => {
-//    trail.append(objects.map(_.position))
-//    if (trail.length > 200) trail.remove(0)
+    //    trail.append(objects.map(_.position))
+    //    if (trail.length > 200) trail.remove(0)
     if (!isFollowing) moveCamera()
   })
   val frameTimer = new Timer(10, (_: ActionEvent) => {
