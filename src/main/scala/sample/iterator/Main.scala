@@ -48,36 +48,48 @@ object Main {
     //        velocity = Vector2D(20, 0)
     //      )
     //    )
-    val n: Int = 5
+    val n: Int = 15
 
     val objects: ArrayBuffer[PointMass] = ArrayBuffer(
       PointMass(
-        mass = 1000000,
-        position = Vector2D(-100, 10.05 + 30.15 * n * 4),
-        velocity = Vector2D(1000, 0),
-        width = Some(100)
+        mass = 10000,
+        position = Vector2D(-500, -1000 + 10.05 + 30.15 * n * 5),
+        velocity = Vector2D(40000, 0),
+        width = Some(150)
+      ),
+      PointMass(
+        mass = 10000,
+        position = Vector2D(-500, 1000 + 10.05 + 30.15 * n * 5),
+        velocity = Vector2D(40000, 0),
+        width = Some(150)
+      ),
+      PointMass(
+        mass = 10000,
+        position = Vector2D(-500, 10.05 + 30.15 * n * 5),
+        velocity = Vector2D(40000, 0),
+        width = Some(150)
       )
     )
 
 
     Range(0, n).foreach { i =>
-      Range(0, n * 4).foreach { j =>
+      Range(0, n * 5).foreach { j =>
         objects.append(
           PointMass(
-            mass = 100000,
-            position = Vector2D(0 + 18.1 * i, (20.1 + 30.15 * i - 40.2 * (i % 2)) % 60.3 + 60.3 * j),
+            mass = 100,
+            position = Vector2D(0 + 17.9 * i, (20.1 + 30.15 * i - 40.2 * (i % 2)) % 60.3 + 60.3 * j),
             width = Some(20)
           ),
           PointMass(
-            mass = 100000,
-            position = Vector2D(0 + 18.1 * i, (30.15 * i - 20.1 * (i % 2)) % 60.3 + 60.3 * j + 40.2),
+            mass = 100,
+            position = Vector2D(0 + 17.9 * i, (30.15 * i - 20.1 * (i % 2)) % 60.3 + 60.3 * j + 40.2),
             width = Some(20)
           )
         )
       }
     }
 
-    iterate(objects.toSeq, 0.00001, 1000000000, Visuals(objects.toSeq, 0))
+    iterate(objects.toSeq, 0.0001, 1000000000, Visuals(objects.toSeq, 0))
 
   }
 }
