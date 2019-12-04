@@ -35,27 +35,28 @@ object Iterator {
     }
   }
 
-//    @scala.annotation.tailrec
+      @scala.annotation.tailrec
   private def accelCalc(objList: Seq[PointMass], returnObjList: Seq[PointMass] = Seq[PointMass](), distanceList: Seq[Seq[Double]], gravConst: Double): (Seq[PointMass], Seq[Seq[Double]]) = {
-//        if (objList.nonEmpty) {
-//          val diffs: Seq[Vector2D] = objList.tail.zip(distanceList(returnObjList.length)).map { case (obj, dist) =>
-//            Vector2D(
-//              (-gravConst * obj.mass * objList.head.mass * (-objList.head.position.x + obj.position.x)) / (dist * dist * dist),
-//              (-gravConst * obj.mass * objList.head.mass * (-objList.head.position.y + obj.position.y)) / (dist * dist * dist)
-//            )
-//          }
-//
-//          val updatedObjList: Seq[PointMass] = objList.tail.zip(diffs).map { case (obj, diff) =>
-//            obj.copy(accel = obj.accel + diff)
-//          }
-//
-//          val updatedHead: PointMass = objList.head.copy(accel = (objList.head.accel - diffs.foldLeft(Vector2D(0, 0))(_ + _)) / objList.head.mass)
-//
-//          accelCalc(updatedObjList, returnObjList.appended(updatedHead), distanceList, gravConst)
-//        }
-//        else (returnObjList, distanceList)
-    (objList, distanceList)
+            if (objList.nonEmpty) {
+              val diffs: Seq[Vector2D] = objList.tail.zip(distanceList(returnObjList.length)).map { case (obj, dist) =>
+                Vector2D(
+                  (-gravConst * obj.mass * objList.head.mass * (-objList.head.position.x + obj.position.x)) / (dist * dist * dist),
+                  (-gravConst * obj.mass * objList.head.mass * (-objList.head.position.y + obj.position.y)) / (dist * dist * dist)
+                )
+              }
+
+              val updatedObjList: Seq[PointMass] = objList.tail.zip(diffs).map { case (obj, diff) =>
+                obj.copy(accel = obj.accel + diff)
+              }
+
+              val updatedHead: PointMass = objList.head.copy(accel = (objList.head.accel - diffs.foldLeft(Vector2D(0, 0))(_ + _)) / objList.head.mass)
+
+              accelCalc(updatedObjList, returnObjList.appended(updatedHead), distanceList, gravConst)
+            }
+            else (returnObjList, distanceList)
+//    (objList, distanceList)
   }
+
 
   private def collisionCalc(lists: (Seq[PointMass], Seq[Seq[Double]]), timeStep: Double): Seq[PointMass] = {
     val array = lists._1.toBuffer

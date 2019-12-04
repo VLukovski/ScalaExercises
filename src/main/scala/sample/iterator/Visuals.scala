@@ -223,8 +223,8 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
   frame.setVisible(true)
 
   val staticTimer = new Timer(10, (_: ActionEvent) => {
-    //    trail.append(objects.map(_.position))
-    //    if (trail.length > 200) trail.remove(0)
+        trail.append(objects.map(_.position))
+        if (trail.length > 100) trail.remove(0)
     if (!isFollowing) moveCamera()
   })
   val frameTimer = new Timer(10, (_: ActionEvent) => {
