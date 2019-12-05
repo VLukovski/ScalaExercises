@@ -2,7 +2,7 @@ package sample.iterator
 
 import sample.iterator.PointMass.Vector2D
 
-case class PointMass(mass: Double, position: Vector2D, velocity: Vector2D, accel: Vector2D, width: Double, isMovable: Boolean)
+case class PointMass(mass: Double, var position: Vector2D, var velocity: Vector2D, var accel: Vector2D, width: Double, isMovable: Boolean)
 
 object PointMass {
 

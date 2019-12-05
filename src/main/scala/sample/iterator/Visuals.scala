@@ -8,20 +8,20 @@ import java.awt.image.BufferedImage
 import javax.swing._
 import sample.iterator.PointMass.Vector2D
 
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
-case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
+case class Visuals(objects: ArrayBuffer[PointMass], var centerOn: Int = 0) {
 
   var offsetCoords: Vector2D = objects(centerOn).position
   var isFollowing: Boolean = true
   var showGrid: Boolean = false
   val movementKeys: ListBuffer[Boolean] = ListBuffer(false, false, false, false)
   val zoomKeys: ListBuffer[Boolean] = ListBuffer(false, false)
-  val trail: ListBuffer[Seq[Vector2D]] = ListBuffer()
+  val trail: ListBuffer[ArrayBuffer[Vector2D]] = ListBuffer()
   var zoom: Double = 1.0
 
 
-  def planetConstantsGenerator: Seq[(BufferedImage, BufferedImage)] = objects.map { obj =>
+  def planetConstantsGenerator: ArrayBuffer[(BufferedImage, BufferedImage)] = objects.map { obj =>
 
     val image: BufferedImage = {
       val canvas = new BufferedImage((obj.width * zoom).ceil.toInt, (obj.width * zoom).ceil.toInt, BufferedImage.TYPE_INT_ARGB)
@@ -46,7 +46,7 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
     (image, trail)
   }
 
-  var planetConstants: Seq[(BufferedImage, BufferedImage)] = planetConstantsGenerator
+  var planetConstants: ArrayBuffer[(BufferedImage, BufferedImage)] = planetConstantsGenerator
 
   def addComponent(component: Component, anchor: Int = GridBagConstraints.PAGE_START, gridx: Int, gridy: Int, gridheight: Int = 1, gridwidth: Int = 1, weightx: Double = 1.0, weighty: Double = 1.0, fill: Int = GridBagConstraints.NONE): Unit = {
     constraints.anchor = anchor
@@ -223,8 +223,8 @@ case class Visuals(var objects: Seq[PointMass], var centerOn: Int) {
   frame.setVisible(true)
 
   val staticTimer = new Timer(10, (_: ActionEvent) => {
-        trail.append(objects.map(_.position))
-        if (trail.length > 100) trail.remove(0)
+//    trail.append(objects.map(_.position))
+//    if (trail.length > 100) trail.remove(0)
     if (!isFollowing) moveCamera()
   })
   val frameTimer = new Timer(10, (_: ActionEvent) => {
